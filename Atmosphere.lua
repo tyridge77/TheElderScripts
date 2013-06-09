@@ -1,3 +1,5 @@
+-- Ambient Sounds *PART*|Contains|Sound|Ogre|*MAX VOLUME*|*RADIUS*|0|
+
 wait(1)--UDim2 variables
 local playergui = script.Parent;
 local UDim2_new = UDim2.new;
@@ -51,9 +53,9 @@ local frozen = false;
 -- Heirarchical
 
 
-local Lighting = game:GetService("Lighting");
+--[[local Lighting = game:GetService("Lighting");
 local MIDILib = Lighting:WaitForChild("MIDILib");
-local MIDIMain = MIDILib:WaitForChild("MusicScript");
+local MIDIMain = MIDILib:WaitForChild("MusicScript");]]
 
 
 
@@ -66,6 +68,7 @@ local Color3_new = Color3.new;
 
 
 local Player = game.Players.LocalPlayer;
+local fatigue = Player.Stats.Fatigue;
 local mouse = Player:GetMouse();
 local gui = script.Parent;
 local cam = Workspace.CurrentCamera;
@@ -87,12 +90,11 @@ local human,torso,head = char:WaitForChild("Humanoid"),char:WaitForChild("Torso"
 
 
 local pat = "(.-)%s"
-local FootStep = 'Terrain_Grass'
+local FootStep = 'Terrain_Tile'
 local soundbase = {
 ['Terrain_Grass'] = 'http://www.roblox.com/asset/?id=17385522',
 ['Terrain_Wood'] = 'http://www.roblox.com/asset/?id=12814239',
 ['Terrain_Tile'] = 'http://www.roblox.com/asset/?id=25641879',
-['Terrain_Wind'] = '',
 ['Terrain_Carpet'] = 'http://www.roblox.com/asset/?id=16720281',
 ['Terrain_Metal'] = 'http://www.roblox.com/asset/?id=11450310'
 }
@@ -107,7 +109,6 @@ local volumebase = {
 ['Terrain_Grass'] = .2,
 ['Terrain_Wood'] = .1,
 ['Terrain_Tile'] = .05,
-['Terrain_Wind'] = .3,
 ['Terrain_Carpet'] = .3,
 ['Terrain_Metal'] = 1
 }
@@ -117,7 +118,6 @@ local volumebasesprint =
 ['Terrain_Grass'] = .5,
 ['Terrain_Wood'] = .3,
 ['Terrain_Tile'] = .5,
-['Terrain_Wind'] = .5,
 ['Terrain_Carpet'] = .5,
 ['Terrain_Metal'] = 1
 }
@@ -416,7 +416,7 @@ human.WalkSpeed = O_W_S;
 
 
 
-local function PlayMIDI(str)
+--[[local function PlayMIDI(str)
 	local msc = MIDIMain:clone();
 	msc.Parent = playergui;
 	MIDILib:WaitForChild(str):clone().Parent = msc:WaitForChild("Song");
@@ -432,7 +432,7 @@ local function PlayMIDI(str)
 			msc:Destroy();
 		end
 	end)
-end
+end]]
 local function PlayDialog(event,perpetrator)
 	human.WalkSpeed = 0;
 	Player.CameraMode = 'LockFirstPerson';
@@ -638,10 +638,11 @@ mouse.KeyDown:connect(function(key)
 		Speed_Render,volumebase = I_S_R,volumebasesprint;
 		human.WalkSpeed = I_W_S;
 		repeat wait(.1) time = time - 1;
+			fatigue.Value = fatigue.Value - 3
 			TweenCam("Minus")
 			wait(.1)
 			TweenCam("Add")
-		until IsSprinting == false or time <=0 
+		until IsSprinting == false or time <=0 or fatigue.Value <= 0
 		Speed_Render,volumebase = O_S_R,volumebaseorig;
 		human.WalkSpeed = O_W_S
 	end
@@ -662,93 +663,3 @@ end)
 	touching = false  
 end)
 local changing = false;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
