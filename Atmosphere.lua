@@ -1,5 +1,5 @@
 wait(1)--UDim2 variables
-
+local playergui = script.Parent;
 local UDim2_new = UDim2.new;
 local OriginalTween = UDim2_new(0,0,0,0)
 local NegativeTween = UDim2_new(-1.5,0,0,0);
@@ -47,6 +47,13 @@ local Ray_new = Ray.new;
 local frozen = false;
 
 
+
+-- Heirarchical
+
+
+local Lighting = game:GetService("Lighting");
+local MIDILib = Lighting:WaitForChild("MIDILib");
+local MIDIMain = MIDILib:WaitForChild("MusicScript");
 
 
 
@@ -118,7 +125,7 @@ local freqnote = [=[
 
 Cricket frequency:
 18.5
-  
+	
 DarkForest frequency:
 
 51.5
@@ -409,8 +416,24 @@ human.WalkSpeed = O_W_S;
 
 
 
-
-function PlayDialog(event,perpetrator)
+local function PlayMIDI(str)
+	local msc = MIDIMain:clone();
+	msc.Parent = playergui;
+	MIDILib:WaitForChild(str):clone().Parent = msc:WaitForChild("Song");
+	local isPlaying = msc:WaitForChild("Properties"):WaitForChild("Advanced"):WaitForChild("isPlaying");
+	wait(1)
+	msc.Disabled = false;
+	isPlaying.Changed:connect(function()
+		if isPlaying.Value == false then 
+			msc.Stop.Value = true;
+			wait(.1)
+			msc.Volume.Value = 0;
+			wait(.1)
+			msc:Destroy();
+		end
+	end)
+end
+local function PlayDialog(event,perpetrator)
 	human.WalkSpeed = 0;
 	Player.CameraMode = 'LockFirstPerson';
 	wait(.5)
@@ -429,7 +452,7 @@ end
 
 
 
-function WaitForDistance(part,radius)
+local function WaitForDistance(part,radius)
 	repeat wait(0.1) until (torso.Position-part.Position).Magnitude <= radius;
 end 
 local DynamicFunctions = {
@@ -506,7 +529,7 @@ end,
 	PlayDialog(d,perpetrator);
 end
 }
-function WalkSound()
+local function WalkSound()
 	--if Beat_Adjust and Is_Adjusting == false then coroutine_resume(coroutine_create(Beat_Adjust)) end 
 	local pitches = pitchbase[FootStep] ~= nil and pitchbase[FootStep] or pitchbase['Terrain_Grass']
 	Sound.SoundId,Sound.Volume = soundbase[FootStep],volumebase[FootStep];
@@ -547,7 +570,10 @@ end
 
 
 
-function LerpCamera(Part1, Part2)
+local function LerpCamera(Part1, Part2)
+	local charfacing = Part2.Parent;
+	local charfacingtorso = charfacing:WaitForChild("Torso");
+	Brick.CFrame = CFrame.new(Brick.Position,brickToFace.Position)
 	Chatting = true
 	cam.CameraType="Scriptable"
 	local camPart=Instance.new("Part", game.Workspace)
@@ -561,7 +587,7 @@ function LerpCamera(Part1, Part2)
 	end
 	game.Debris:AddItem(camPart,1)
 end
-function TweenCam(Status)
+local function TweenCam(Status)
 	local Add_Tab = {
 	CFrame_new(0.02,.02,0),
 	CFrame_new(0,.02,0.02)
@@ -636,3 +662,93 @@ end)
 	touching = false  
 end)
 local changing = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
