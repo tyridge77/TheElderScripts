@@ -462,6 +462,7 @@ local DynamicFunctions = {
 	local quitest,name,closest = 0,partt.Name,10000000
 	local freq = 0;
 	local a, b, c, d, e, f, g = name:match("^(.-)|(.-)|(.-)|(.-)|(.-)|(.-)|(.-)|?$");
+	if gui:FindFirstChild(d) then return end 
 	local loudest,Radius,frequency = tonumber(e),tonumber(f),tonumber(g)
 	local s = Instance_new("Sound",gui); 	s.Name = d;
 	local id = SoundDatabase[d:lower()]:lower()
@@ -656,8 +657,8 @@ end)
 	if touching or frozen == true then return end 
 	touching = true
 	local passed = hit.Name;
-		if(passed:match("%w+|%w+|(%w+)|%w+|%w+|%w+|%w+|?")) then
-			DynamicFunctions[passed:match("%w+|%w+|(%w+)|%w+|%w+|%w+|%w+|?")](hit)
+		if(passed:match("%w+|%w+|(%w+)|%w+|.+|.+|.+|?")) then print("Yes")
+			DynamicFunctions[passed:match("%w+|%w+|(%w+)|%w+|.+|.+|.+|?")](hit)
 		end
 	wait(.1)
 	touching = false  
