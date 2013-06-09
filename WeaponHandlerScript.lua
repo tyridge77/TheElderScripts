@@ -35,7 +35,7 @@ local rate=1/30
 local barreloffset=Vector3.new(-.05,.5,-1.5)
 local windvec=Vector3.new(2,-1,1).unit
 local debris = game:GetService("Debris")
-local playsound = script.PlaySound
+local playsound = script:WaitForChild("PlaySound")
 local deb = 0
 
 function tagHumanoid(humanoid, player)
