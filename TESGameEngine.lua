@@ -1,5 +1,3 @@
--- THIS ONLY WORKS IN SOLO (Not sure why) I fixed the Lockpicking and mostly fixed the Looting.
-
 -- Essentials
 wait(1)
 
@@ -10,6 +8,8 @@ local GameFiles = Lighting:WaitForChild("GameFiles");
 local ChatChannels = GameFiles:WaitForChild("ChatChannels");
 local channel1 = ChatChannels:WaitForChild("World");
 local Items = Lighting:WaitForChild("Items");
+local Weapons = Items:WaitForChild("Weapons");
+
 local ArmorImages = Items:WaitForChild("ArmorImages");
 local Players = game:GetService("Players");
 local Player = Players.LocalPlayer
@@ -61,12 +61,20 @@ local vals = CastBar:WaitForChild("CastTime").Value;
 --local LoadingGui = PlayerGui:WaitForChild("LoadingGui");
 
 
-local CharMenu = PlayerGui:WaitForChild("CharMenu");
+local CharMenu = PlayerGui:WaitForChild("CharMenu")
+local CharMenuActionBar = CharMenu.ActionBar;
+
 local CharMenuBackground = CharMenu.Background
 local CharMenuBackpack = CharMenuBackground.Backpack;
+local CharMenuInfoWindow = CharMenuBackpack.Background:WaitForChild("InfoWindow");
+print(CharMenuInfoWindow)
+local CharMenuUI = CharMenuBackpack.UI;
 local Gold = CharMenuBackpack.Background.Gold
 local GoldAmt = Gold.Amt;
 local CharMenuChatting = CharMenu.Chatting;
+
+
+
 
 local ChatGui = PlayerGui:WaitForChild("ChatGui");
 local ChatGuiMove = ChatGui.Move;
@@ -222,10 +230,10 @@ local Zerod3 = UDim2.new(0,-1000,0,25)
 local LockFramePosition = UDim2.new(0,300,0,150);
 local LockBackgroundPosition = UDim2.new(0,320,0,175);
 local TumblerPositions = {
-  [LockPickFrame.P1] = LockPickFrame.P1.Position,
-	[LockPickFrame.P2]=LockPickFrame.P2.Position,
-	[LockPickFrame.P3] = LockPickFrame.P3.Position
-	}
+[LockPickFrame.P1] = LockPickFrame.P1.Position,
+[LockPickFrame.P2]=LockPickFrame.P2.Position,
+[LockPickFrame.P3] = LockPickFrame.P3.Position
+}
 --BrickColor Variables
 
 
@@ -342,50 +350,50 @@ function CloseLock()
 print("Closing") end;
 
 function start(v, wat)
-		spos = v.Position	
-		if anim.Value == false then
-			if up == false then
-				up = true
-				deb = 0
-				spos = v.Position
-				dpos = spos - UDim2_new(0,0,0,70)
-				anim.Value = true
-				l:TweenPosition(l.Position - UDim2_new(0,0,0,15), "Out", "Quad", .3, true, nil)
-				wait(.3)
-				ready = true
-				v:TweenPosition(dpos, "Out", "Quad", speed,true,nil)
-				l:TweenPosition(l.Position + UDim2_new(0,0,0,15), "Out", "Quad", .3, true, nil)
-				anim.Value = false
+	spos = v.Position	
+	if anim.Value == false then
+		if up == false then
+			up = true
+			deb = 0
+			spos = v.Position
+			dpos = spos - UDim2_new(0,0,0,70)
+			anim.Value = true
+			l:TweenPosition(l.Position - UDim2_new(0,0,0,15), "Out", "Quad", .3, true, nil)
+			wait(.3)
+			ready = true
+			v:TweenPosition(dpos, "Out", "Quad", speed,true,nil)
+			l:TweenPosition(l.Position + UDim2_new(0,0,0,15), "Out", "Quad", .3, true, nil)
+			anim.Value = false
+			wait(speed + wt)
+			if clicked == false then
+				deb = 1
+				up = false
+				v:TweenPosition(spos, "Out", "Quad", speed/2, true, nil)
 				wait(speed + wt)
-				if clicked == false then
-					deb = 1
-					up = false
-					v:TweenPosition(spos, "Out", "Quad", speed/2, true, nil)
-					wait(speed + wt)
-					deb = 0
-				end
-				ready = false
-				elseif up == true then
-				if ready then
-					clicked = true
-					LockPickGui.Num.Value = LockPickGui.Num.Value + 1
-					LockSucceed:Play();
-					for i = 1, 50 do wait(0) LockSucceed.Pitch = LockSucceed.Pitch + .5 end
-					wait(1)
-					LockSucceed.Pitch = .1;
-					dtab[wat] = true
-					else
-					if LockPick.Value > 0 then
-						LockPick.Value = LockPick.Value - 1
-					end
-				end
+				deb = 0
 			end
-			else
-			if  LockPick.Value > 0 then
-				LockPick.Value = LockPick.Value - 1
+			ready = false
+			elseif up == true then
+			if ready then
+				clicked = true
+				LockPickGui.Num.Value = LockPickGui.Num.Value + 1
+				LockSucceed:Play();
+				for i = 1, 50 do wait(0) LockSucceed.Pitch = LockSucceed.Pitch + .5 end
+				wait(1)
+				LockSucceed.Pitch = .1;
+				dtab[wat] = true
+				else
+				if LockPick.Value > 0 then
+					LockPick.Value = LockPick.Value - 1
+				end
 			end
 		end
+		else
+		if  LockPick.Value > 0 then
+			LockPick.Value = LockPick.Value - 1
+		end
 	end
+end
 
 local function RunLockpick(doorhere,difficultyval)
 	LockPickFrame:TweenPosition(LockFramePosition,'Out','Linear',.5,true,nil);
@@ -396,56 +404,56 @@ local function RunLockpick(doorhere,difficultyval)
 	if LockPickGui.Difficulty.Value == "Easy" then
 		speed = 1
 		wt = 1
-	elseif LockPickGui.Difficulty.Value == "Average" then
+		elseif LockPickGui.Difficulty.Value == "Average" then
 		speed = .6
 		wt = .5
-	elseif LockPickGui.Difficulty.Value == "Hard" then
+		elseif LockPickGui.Difficulty.Value == "Hard" then
 		speed = .3
 		wt = .25
 	end
 	local ready = false
 	LockPickFrame.DLock.Text = "Difficulty: "..LockPickGui.Difficulty.Value;
 	LockPickFrame.NumP.Text = "LockPicks: "..LockPick.Value;
-    pickmove = mouse.Move:connect(function ()
+	pickmove = mouse.Move:connect(function ()
 		if mouse.X >= 300 and mouse.X <= 615 then
 			if anim.Value == false then
 				l.Position = UDim2_new(0,(mouse.X - 350),0,300)
 			end
 		end
-		end)
-		-- Make events~
-		dtab = {}
-		for i,v in pairs(LockPickFrame:GetChildren()) do
-	if v.ClassName == "ImageButton" or v.ClassName == "TextButton" then
-		print'NEW EVENT ADDED'
-		--pickevents[#pickevents+1]=v.MouseButton1Down:connect(function ()
-		v.MouseButton1Down:connect(function ()
-			if v.Name == "X" then
-				CloseLock()
-			end
-			if v.ClassName == "ImageButton" then
-				print(v.Name)
-				print'image button clicked'
-				if v.Name == "P1" then
-					if dtab["P1"] == nil then
-						start(v, "P1")
+	end)
+	-- Make events~
+	dtab = {}
+	for i,v in pairs(LockPickFrame:GetChildren()) do
+		if v.ClassName == "ImageButton" or v.ClassName == "TextButton" then
+			print'NEW EVENT ADDED'
+			--pickevents[#pickevents+1]=v.MouseButton1Down:connect(function ()
+				v.MouseButton1Down:connect(function ()
+					if v.Name == "X" then
+						CloseLock()
 					end
-				elseif v.Name == "P2" then
-					if dtab["P2"] == nil then
-						start(v, "P2")
+					if v.ClassName == "ImageButton" then
+						print(v.Name)
+						print'image button clicked'
+						if v.Name == "P1" then
+							if dtab["P1"] == nil then
+								start(v, "P1")
+							end
+							elseif v.Name == "P2" then
+							if dtab["P2"] == nil then
+								start(v, "P2")
+							end
+							elseif v.Name == "P3" then
+							if dtab["P3"] == nil then
+								start(v, "P3")
+							end	
+						end
 					end
-				elseif v.Name == "P3" then
-					if dtab["P3"] == nil then
-						start(v, "P3")
-					end	
-				end
+					up = false
+					deb = 0
+				end)
 			end
-			up = false
-			deb = 0
-		end)
+		end
 	end
-end
-end
 	pickevents[#pickevents+1]=LockPickGui.Num.Changed:connect(function()
 		local Door = LockPickGui.Door.Value
 		if LockPickGui.Num.Value >= LockPickGui.DNum.Value then
@@ -453,424 +461,374 @@ end
 			CloseLock()
 		end
 	end)
-
-function Loot()
-	LootMain:TweenSize(LootSize,'Out','Elastic',.5,true,nil);
-	wait(.6)
-	for _,v in pairs(LootBackground:GetChildren()) do if v.ClassName ~= "LocalScript" then v.Visible = true end end
-	LootExit.Visible = true
-	local p1 = nil;
-	function createobject(a, wat)
-		if a ~= "Gold" then
-			print'notgold'
-			local tempitem = Items[wat]:FindFirstChild(a)
-			print(tempitem.Name)
-			p1 = Instance_new("BoolValue")
-			p1.Name = a
-			local p2 = Instance_new("StringValue", p1)
-			p2.Name = "Class"
-			local p3 = Instance_new("StringValue", p1)
-			p3.Name = "Slot"
-			local p4 = Instance_new("StringValue", p1)
-			p4.Name = "Type"
-			if tempitem:FindFirstChild("Damage") ~= nil then
-				p2.Value = "Weapon"
-				p3.Value = "Hand"
-				p4.Value = tempitem.Type.Value
-				elseif tempitem:FindFirstChild("Shield") or tempitem:FindFirstChild("Quiver") then
-				p2.Value = "Secondary"
-				p3.Value = "OffHand"
-				p4.Value = tempitem.Type.Value
-				elseif tempitem:FindFirstChild("Duration") then
-				print"FOOD"
-				p2.Value = "Food"
-				elseif tempitem:FindFirstChild("Amount") then
-				print"POTION"
-				p2.Value = "Potion"
-					
-				else
-				p2.Value = "Armor"
-				p3.Value = tempitem.Slot.Value
-				p4.Value = tempitem.CreateRef.Value
+		
+	function Loot()
+		LootMain:TweenSize(LootSize,'Out','Elastic',.5,true,nil);
+		wait(.6)
+		for _,v in pairs(LootBackground:GetChildren()) do if v.ClassName ~= "LocalScript" then v.Visible = true end end
+		LootExit.Visible = true
+		local p1 = nil;
+		function createobject(a, wat)
+			if a ~= "Gold" then
+				print'notgold'
+				local tempitem = Items[wat]:FindFirstChild(a)
+				print(tempitem.Name)
+				p1 = Instance_new("BoolValue")
+				p1.Name = a
+				local p2 = Instance_new("StringValue", p1)
+				p2.Name = "Class"
+				local p3 = Instance_new("StringValue", p1)
+				p3.Name = "Slot"
+				local p4 = Instance_new("StringValue", p1)
+				p4.Name = "Type"
+				if tempitem:FindFirstChild("Damage") ~= nil then
+					p2.Value = "Weapon"
+					p3.Value = "Hand"
+					p4.Value = tempitem.Type.Value
+					elseif tempitem:FindFirstChild("Shield") or tempitem:FindFirstChild("Quiver") then
+					p2.Value = "Secondary"
+					p3.Value = "OffHand"
+					p4.Value = tempitem.Type.Value
+					elseif tempitem:FindFirstChild("Duration") then
+					print"FOOD"
+					p2.Value = "Food"
+					elseif tempitem:FindFirstChild("Amount") then
+					print"POTION"
+					p2.Value = "Potion"
+						
+					else
+					p2.Value = "Armor"
+					p3.Value = tempitem.Slot.Value
+					p4.Value = tempitem.CreateRef.Value
+				end
+			end
+			if a == "Gold" then
+				print'gold'
+				GoldAmt.Value = GoldAmt.Value + wat
+				Gold.Text = tostring(GoldAmt.Value)
+			end
+			if p1 ~= nil then
+				print"P1"
+				p1.Parent = CharMenuBackpack.Looting
 			end
 		end
-		if a == "Gold" then
-			print'gold'
-			GoldAmt.Value = GoldAmt.Value + wat
-			Gold.Text = tostring(GoldAmt.Value)
-		end
-		if p1 ~= nil then
-			print"P1"
-			p1.Parent = CharMenuBackpack.Looting
-		end
-	end
-	wait()
-	for _,v in pairs(LootBackground:GetChildren()) do 
-		if v:isA("ImageButton") then
-			local vinfo = v.info
-			local vamt = v.Amt;
-			local vtype = v.Type
-			ButtonKey = v.MouseButton1Down:connect(function ()
-				if v.Image ~= "" and vinfo.Text == 'Gold' then
-					createobject(vinfo.Text, vamt.Value)
-					v:TweenSizeAndPosition(Zerod, Zerod)
-					wait(1)
-					vinfo.Text = ""
-					v.Visible = false;
-					vamt.Value = 0;
-					vtype.Value = "";
-					else
-					createobject(vinfo.Text, vtype.Value)
-					v:TweenSizeAndPosition(Zerod, Zerod)
-					wait(1)
-					vinfo.Text = ""
-					v.Visible = false
-					vamt.Value = 0
-					vtype.Value = ""
-				end
-				ButtonKey:disconnect();
-			end)
+		wait()
+		for _,v in pairs(LootBackground:GetChildren()) do 
+			if v:isA("ImageButton") then
+				local vinfo = v.info
+				local vamt = v.Amt;
+				local vtype = v.Type
+				ButtonKey = v.MouseButton1Down:connect(function ()
+					if v.Image ~= "" and vinfo.Text == 'Gold' then
+						createobject(vinfo.Text, vamt.Value)
+						v:TweenSizeAndPosition(Zerod, Zerod)
+						wait(1)
+						vinfo.Text = ""
+						v.Visible = false;
+						vamt.Value = 0;
+						vtype.Value = "";
+						else
+						createobject(vinfo.Text, vtype.Value)
+						v:TweenSizeAndPosition(Zerod, Zerod)
+						wait(1)
+						vinfo.Text = ""
+						v.Visible = false
+						vamt.Value = 0
+						vtype.Value = ""
+					end
+					ButtonKey:disconnect();
+				end)
+			end
 		end
 	end
-end
-LootExit.MouseButton1Down:connect(function()
-	for _,v in pairs(LootBackground:GetChildren()) do if v.ClassName ~= "LocalScript" then v.Visible = false; end end
-	LootMain:TweenSize(Zerod,'Out','Linear',.5,true,nil);
-end)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---Combat
-
-
-
-function Cast()
-	local NumOf = 0;
-	local tempmath = vals*10;
-	local color = CastBarGuiBar.BackgroundColor3;
-	for i=1, tempmath do
-		wait(vals/(10*vals) -.05)
-		NumOf = NumOf + 1
-		CastBarGuiBar.Size = UDim2_new(NumOf/tempmath, 0, 1, 0)
-	end 
-	CastBarGuiBar.BackgroundColor3 = CastBarGuiBar.BorderColor3
-	CastBarGuiMain.Visible = false 
-	wait(.05)
-	CastBarGuiBar.Size = UDim2_new(0,0,0,0)
-	CastBarGuiBar.BackgroundColor3 = color;
-	if CastBarGuiHB.Value["_magic"] then
-		CastBarGuiHB.Value["_magic"].Casted.Value = true 
-		else
-		CastBarGuiHB.Value["_ability"].Casted.Value = true 
-	end 
-end
-
-function checkdistance(obj)
-	if (Torso.Position - obj.Position).magnitude <= 7 then
-		return true
-		else
+	LootExit.MouseButton1Down:connect(function()
+		for _,v in pairs(LootBackground:GetChildren()) do if v.ClassName ~= "LocalScript" then v.Visible = false; end end
+		LootMain:TweenSize(Zerod,'Out','Linear',.5,true,nil);
+	end)
+		
+		
+		
+		
+		
+		
+		
+		
+	--Inventory
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	--Combat
+		
+		
+		
+	function Cast()
+		local NumOf = 0;
+		local tempmath = vals*10;
+		local color = CastBarGuiBar.BackgroundColor3;
+		for i=1, tempmath do
+			wait(vals/(10*vals) -.05)
+			NumOf = NumOf + 1
+			CastBarGuiBar.Size = UDim2_new(NumOf/tempmath, 0, 1, 0)
+		end 
+		CastBarGuiBar.BackgroundColor3 = CastBarGuiBar.BorderColor3
+		CastBarGuiMain.Visible = false 
+		wait(.05)
+		CastBarGuiBar.Size = UDim2_new(0,0,0,0)
+		CastBarGuiBar.BackgroundColor3 = color;
+		if CastBarGuiHB.Value["_magic"] then
+			CastBarGuiHB.Value["_magic"].Casted.Value = true 
+			else
+			CastBarGuiHB.Value["_ability"].Casted.Value = true 
+		end 
+	end
+		
+	function checkdistance(obj)
+		if (Torso.Position - obj.Position).magnitude <= 7 then
+			return true
+			else
+			return false
+		end
+	end
+		
+	function findemptyloot(d)
+		for z = 1, 6 do
+			local tfind = d:FindFirstChild("B"..tostring(z))
+			if tfind.info.Text == "" then
+				return tfind
+			end
+		end
+	end
+		
+	function populate(source, d)
+		for _,v  in pairs(source:GetChildren()) do 
+			wait()
+			local tloc = findemptyloot(d);
+			tloc.Image = ArmorImages:FindFirstChild(v.Img.Value).Texture
+			tloc.info.Text = v.Name
+			tloc.Type.Value = v.Type.Value
+			if v.Value ~= 0 then
+				tloc.Amt.Value = v.Value
+			end
+		end
+	end
+		
+	function error(text, duration)
+		local precount = 0
+		ebutton.Visible = true
+		ebutton.Text = text
+		ebutton.TextTransparency = 0
+		wait(duration)
+		repeat
+			wait(.1)
+			ebutton.TextTransparency = ecount
+			ecount = ecount + 0.1
+			precount = ecount
+			if precount > ecount then
+				break
+			end
+			print(tostring(ecount))
+		until	ecount >= 1
+		if ecount > 1 then
+			ecount = 1
+		end
+		ebutton.Visible = false
+	end
+		
+	function treasure(t)
+		if checkdistance(t) == true then
+			if t.Parent.Locked.Value == true then
+				RunLockpick(t.Parent,t.Parent.Locked.DLock.Value)
+				else
+				populate(t.Parent.TChest, LootBackground)
+				Loot()
+			end
+			else
+			ecount = 0
+			error("I'm too far away!", 1)
+		end
+	end
+		
+	function door(var)
+		if checkdistance(var) == true then
+			if var.Parent.Locked.Value == true then
+				RunLockpick(var.Parent,var.Parent.Locked.DLock.Value);
+				else
+				local goto = var.Parent:findFirstChild("Go To")
+				Torso.CFrame = (goto.CFrame + Vector3_new(0,5,0))
+				--d = Instance_new("StringValue", p.Location)
+				Location.Value = var.Parent.Place.Value
+			end
+			else
+			ecount = 0
+			error("I'm too far away!", 1)	
+		end
+	end
+		
+		
+	function tagHumanoid(humanoid, Player)
+		local tag = Instance_new("ObjectValue")
+		tag.Value = Player
+		tag.Name = "creator"
+		tag.Parent = Human.Parent
+	end
+		
+	function damagef(mon, Player, what)
+		local block = game.Lighting.DamageDeal:clone()
+		local wep = Blade.Value.Damage;
+		local damage = math_random(wep.Value - 2, wep.Value + 2)
+		block.TextLabel.Text = tostring(damage) + Stats[what].Value
+		block.Parent = mon.Parent.Head
+		block.Adornee = mon.Parent.Head
+		mon.Health = mon.Health - (damage + Stats[what].Value)
+		debris:AddItem(block, .5)
+	end
+		
+	function cframe(part, to, offset, on, nn)
+		local bad = part:findFirstChild(on)
+		if bad then
+			bad:Destroy()
+		end
+		local tw = Instance_new("Weld", part)
+		tw.Part0 = to
+		tw.Part1 = part
+		tw.Name = nn
+		if offset ~= nil then
+			tw.C0 = offset
+		end
+	end
+		
+	function checkintangible(hit)
+		if hit and hit~=nil then
+			if hit:IsDescendantOf(sword.Parent) or hit.Transparency>.9 or hit.Name=="Handle" or hit.Name=="Effect" or hit.Name=="Bullet" or hit.Name=="Laser" or string_lower(hit.Name)=="water" or hit.Name=="Rail" or hit.Name=="Arrow" then
+				return true
+			end
+		end
 		return false
 	end
-end
-
-function findemptyloot(d)
-	for z = 1, 6 do
-		local tfind = d:FindFirstChild("B"..tostring(z))
-		if tfind.info.Text == "" then
-			return tfind
-		end
-	end
-end
-
-function populate(source, d)
-	for _,v  in pairs(source:GetChildren()) do 
-		wait()
-		local tloc = findemptyloot(d);
-		tloc.Image = ArmorImages:FindFirstChild(v.Img.Value).Texture
-		tloc.info.Text = v.Name
-		tloc.Type.Value = v.Type.Value
-		if v.Value ~= 0 then
-			tloc.Amt.Value = v.Value
-		end
-	end
-end
-
-function error(text, duration)
-	local precount = 0
-	ebutton.Visible = true
-	ebutton.Text = text
-	ebutton.TextTransparency = 0
-	wait(duration)
-	repeat
-		wait(.1)
-		ebutton.TextTransparency = ecount
-		ecount = ecount + 0.1
-		precount = ecount
-		if precount > ecount then
-			break
-		end
-		print(tostring(ecount))
-	until	ecount >= 1
-	if ecount > 1 then
-		ecount = 1
-	end
-	ebutton.Visible = false
-end
-
-function treasure(t)
-	if checkdistance(t) == true then
-		if t.Parent.Locked.Value == true then
-			RunLockpick(t.Parent,t.Parent.Locked.DLock.Value)
-			else
-			populate(t.Parent.TChest, LootBackground)
-			Loot()
-		end
-		else
-		ecount = 0
-		error("I'm too far away!", 1)
-	end
-end
-
-function door(var)
-	if checkdistance(var) == true then
-		if var.Parent.Locked.Value == true then
-			RunLockpick(var.Parent,var.Parent.Locked.DLock.Value);
-			else
-			local goto = var.Parent:findFirstChild("Go To")
-			Torso.CFrame = (goto.CFrame + Vector3_new(0,5,0))
-			--d = Instance_new("StringValue", p.Location)
-			Location.Value = var.Parent.Place.Value
-		end
-		else
-		ecount = 0
-		error("I'm too far away!", 1)	
-	end
-end
-
-
-function tagHumanoid(humanoid, Player)
-	local tag = Instance_new("ObjectValue")
-	tag.Value = Player
-	tag.Name = "creator"
-	tag.Parent = Human.Parent
-end
-
-function damagef(mon, Player, what)
-	local block = game.Lighting.DamageDeal:clone()
-	local wep = Blade.Value.Damage;
-	local damage = math_random(wep.Value - 2, wep.Value + 2)
-	block.TextLabel.Text = tostring(damage) + Stats[what].Value
-	block.Parent = mon.Parent.Head
-	block.Adornee = mon.Parent.Head
-	mon.Health = mon.Health - (damage + Stats[what].Value)
-	debris:AddItem(block, .5)
-end
-
-function cframe(part, to, offset, on, nn)
-	local bad = part:findFirstChild(on)
-	if bad then
-		bad:Destroy()
-	end
-	local tw = Instance_new("Weld", part)
-	tw.Part0 = to
-	tw.Part1 = part
-	tw.Name = nn
-	if offset ~= nil then
-		tw.C0 = offset
-	end
-end
-
-function checkintangible(hit)
-	if hit and hit~=nil then
-		if hit:IsDescendantOf(sword.Parent) or hit.Transparency>.9 or hit.Name=="Handle" or hit.Name=="Effect" or hit.Name=="Bullet" or hit.Name=="Laser" or string_lower(hit.Name)=="water" or hit.Name=="Rail" or hit.Name=="Arrow" then
-			return true
-		end
-	end
-	return false
-end
-
-function castray(startpos,vec,length,ignore,delayifhit)
-	local hit,endpos2=Workspace:FindPartOnRay(Ray_new(startpos,vec*length),ignore)
-	if hit~=nil then
-		if checkintangible(hit) then
-			if delayifhit then
-				wait()
-			end
-			hit,endpos2=castray(endpos2+(vec*.01),vec,length-((startpos-endpos2).magnitude),ignore,delayifhit)
-		end
-	end
-	return hit,endpos2
-end
-
-function drawbeam(beamstart,beamend,clr,fadedelay)
-	local dist=(beamstart-beamend).magnitude
-	local laser=Instance_new("Part")
-	laser.Name="Effect"
-	laser.Anchored=true
-	laser.CanCollide=false
-	laser.Shape="Block"
-	laser.formFactor="Custom"
-	laser.Size=Vector3_new(.2,.2,.2)
-	laser.Transparency=5
-	laser.Material=Enum.Material.Plastic
-	laser.Locked=true
-	laser.TopSurface=0
-	laser.BottomSurface=0
-	laser.BrickColor=clr
-	laser.CFrame=CFrame_new(beamend,beamstart)*CFrame_new(0,0,-dist/2)*CFrame_Angles(math_pi/2,0,0)
-	local m=Instance_new("SpecialMesh")
-	m.Scale=Vector3_new(1,dist*5,1)
-	m.Parent=laser
-	debris:AddItem(laser,fadedelay*3)
-	laser.Parent=Workspace		
-	local frames=math_floor(fadedelay/rate)
-	for frame=1,frames do
-		wait(rate)
-		local percent=frame/frames
-		laser.CFrame=laser.CFrame+windvec*rate
-		laser.Transparency=.5+(percent*.5)
-	end
-	wait(1)
-	laser:Destroy()
-end
-function go(targetpos,startpos,fadedelay)
-	enabled = false
-	wait()
-	print'go 1'
-	if Bow.Value == false and Magic.Value == false then
-		print'no Bow'
-		print'no magic'
-		local anim = math_random(1,7)
-		swinganims[anim]:Play();
-		wait(.5);
-		enabled = true
-		elseif Bow.Value == true and Arrows.Value == true then
-		print'yes Bow'
-		print'arrows good'
-		ArrowAnim:Play()
-		sword.Arrow.Transparency = 0
-		wait(1.5)
-		local fakestartpos=(sword.Handle.CFrame*CFrame_new(barreloffset)).p
-		local vec=(targetpos-startpos).unit
-		local p=Instance_new("Part")
-		p.Name="Arrow"
-		p.BrickColor=BrickColor_new("Black")
-		p.CanCollide=false
-		p.TopSurface="Smooth"
-		p.BottomSurface="Smooth"
-		p.formFactor="Custom"
-		p.Size=Vector3_new(.3,.3,2.7)
-		local m=Instance_new("SpecialMesh")
-		m.MeshId="http://www.roblox.com/asset/?id=90708690"
-		m.TextureId="http://www.roblox.com/asset/?id=90708422"
-		m.Scale=Vector3_new(1,1,2)
-		m.Parent=p
-			
-		local c=Instance_new("ObjectValue")
-		c.Name="creator"
-		c.Value=Player;
-		c.Parent=p
-		local sound=Instance_new("Sound")
-		sound.SoundId="http://www.roblox.com/asset/?id=16211030"
-		sound.Volume=1
-		sound.Parent=p
-		sound:Play()
-		local damagetag=Instance_new("IntValue")
-		damagetag.Name="DamageTag"
-		damagetag.Value=damage
-		damagetag.Parent=p
-		local s=Scripts.Hurt:clone()
-		s.Parent=p
-		s.Disabled=false
-		local hit,endpos=castray(startpos,vec,range,sword.Parent,false)
-		local fakevec=(endpos-fakestartpos).unit
+		
+	function castray(startpos,vec,length,ignore,delayifhit)
+		local hit,endpos2=Workspace:FindPartOnRay(Ray_new(startpos,vec*length),ignore)
 		if hit~=nil then
-			local newcf=CFrame_new(endpos,endpos+fakevec)*CFrame_new(0,0,.9+(math_random(0,1)*.4))
-			p.CFrame=newcf
-			local w=Instance_new("Weld")
-			w.Part0=hit
-			w.Part1=p
-			w.C0=hit.CFrame:inverse()*newcf
-			w.C1=newcf:inverse()*newcf
-			w.Parent=p
-			else
-			p.CFrame=CFrame_new(endpos,endpos+fakevec)
-			p.Velocity=fakevec*300
-			p.Parent=Workspace
-		end	
-		debris:AddItem(p,10+(math_random()*10))
-		p.Parent=Workspace
-			
-		delay(0,function()
-			drawbeam(fakestartpos,endpos,BrickColor_new("Institutional white"),fadedelay)
-		end)
-		if hit.Parent:FindFirstChild("Monster") then
-			damagef(hit.Parent.Monster, Player, "Strength")
-			tagHumanoid(hit.Parent.Monster, Player)	
+			if checkintangible(hit) then
+				if delayifhit then
+					wait()
+				end
+				hit,endpos2=castray(endpos2+(vec*.01),vec,length-((startpos-endpos2).magnitude),ignore,delayifhit)
+			end
 		end
-		playsound.SoundName.Value="FireSound"
-		playsound.Value=not playsound.Value
+		return hit,endpos2
+	end
+		
+	function drawbeam(beamstart,beamend,clr,fadedelay)
+		local dist=(beamstart-beamend).magnitude
+		local laser=Instance_new("Part")
+		laser.Name="Effect"
+		laser.Anchored=true
+		laser.CanCollide=false
+		laser.Shape="Block"
+		laser.formFactor="Custom"
+		laser.Size=Vector3_new(.2,.2,.2)
+		laser.Transparency=5
+		laser.Material=Enum.Material.Plastic
+		laser.Locked=true
+		laser.TopSurface=0
+		laser.BottomSurface=0
+		laser.BrickColor=clr
+		laser.CFrame=CFrame_new(beamend,beamstart)*CFrame_new(0,0,-dist/2)*CFrame_Angles(math_pi/2,0,0)
+		local m=Instance_new("SpecialMesh")
+		m.Scale=Vector3_new(1,dist*5,1)
+		m.Parent=laser
+		debris:AddItem(laser,fadedelay*3)
+		laser.Parent=Workspace		
+		local frames=math_floor(fadedelay/rate)
+		for frame=1,frames do
+			wait(rate)
+			local percent=frame/frames
+			laser.CFrame=laser.CFrame+windvec*rate
+			laser.Transparency=.5+(percent*.5)
+		end
 		wait(1)
-		enabled = true
-		elseif Bow.Value == true and Arrows.Value == false then
-		ecount = 0
-		error("You do not have any Arrows equipped!", 1.5)
+		laser:Destroy()
+	end
+	function go(targetpos,startpos,fadedelay)
+		enabled = false
+		wait()
+		print'go 1'
+		if Bow.Value == false and Magic.Value == false then
+			print'no Bow'
+			print'no magic'
+			local anim = math_random(1,7)
+			swinganims[anim]:Play();
+			wait(.5);
 			enabled = true
-			elseif Magic.Value == true then
-			print'yes magic'
-			swingWithOut:Play()
-			print'swingwithout'
-			wait(.5)
+			elseif Bow.Value == true and Arrows.Value == true then
+			print'yes Bow'
+			print'arrows good'
+			ArrowAnim:Play()
+			sword.Arrow.Transparency = 0
+			wait(1.5)
 			local fakestartpos=(sword.Handle.CFrame*CFrame_new(barreloffset)).p
 			local vec=(targetpos-startpos).unit
-				
 			local p=Instance_new("Part")
 			p.Name="Arrow"
-			p.BrickColor=BrickColor_new("White")
+			p.BrickColor=BrickColor_new("Black")
 			p.CanCollide=false
 			p.TopSurface="Smooth"
 			p.BottomSurface="Smooth"
 			p.formFactor="Custom"
-			p.Size=Vector3_new(1,1,1)
-			Scripts.SMesh:clone().Parent = p
+			p.Size=Vector3_new(.3,.3,2.7)
+			local m=Instance_new("SpecialMesh")
+			m.MeshId="http://www.roblox.com/asset/?id=90708690"
+			m.TextureId="http://www.roblox.com/asset/?id=90708422"
+			m.Scale=Vector3_new(1,1,2)
+			m.Parent=p
 				
 			local c=Instance_new("ObjectValue")
 			c.Name="creator"
-			c.Value=Player
+			c.Value=Player;
 			c.Parent=p
-				
 			local sound=Instance_new("Sound")
 			sound.SoundId="http://www.roblox.com/asset/?id=16211030"
 			sound.Volume=1
 			sound.Parent=p
 			sound:Play()
-				
 			local damagetag=Instance_new("IntValue")
 			damagetag.Name="DamageTag"
 			damagetag.Value=damage
 			damagetag.Parent=p
-				
 			local s=Scripts.Hurt:clone()
 			s.Parent=p
 			s.Disabled=false
-				
 			local hit,endpos=castray(startpos,vec,range,sword.Parent,false)
 			local fakevec=(endpos-fakestartpos).unit
 			if hit~=nil then
@@ -886,113 +844,298 @@ function go(targetpos,startpos,fadedelay)
 				p.CFrame=CFrame_new(endpos,endpos+fakevec)
 				p.Velocity=fakevec*300
 				p.Parent=Workspace
-			end
-				
-			debris:AddItem(p,.7)
+			end	
+			debris:AddItem(p,10+(math_random()*10))
 			p.Parent=Workspace
 				
 			delay(0,function()
-				drawbeam(fakestartpos,endpos,BrickColor_new("Bright red"),fadedelay)
+				drawbeam(fakestartpos,endpos,BrickColor_new("Institutional white"),fadedelay)
 			end)
 			if hit.Parent:FindFirstChild("Monster") then
-				damagef(hit.Parent.Monster, Player, "Magicka")
-				tagHumanoid(hit.Parent.Monster, Player)
+				damagef(hit.Parent.Monster, Player, "Strength")
+				tagHumanoid(hit.Parent.Monster, Player)	
 			end
 			playsound.SoundName.Value="FireSound"
 			playsound.Value=not playsound.Value
-				
 			wait(1)
 			enabled = true
-		end 
-	end
-	mouse.Button1Down:connect(function ()
-		if not enabled then
-			return
-		end
-		if Scripts.Magic.Value == false then
-			print'nomagic'
-			local calc = fatigue.Value - cost
-			if calc >= 0 then
-				print'calc1 good'
-				if equipped == true then
-					print'equipped'
-					fatigue.Value = fatigue.Value - cost
-					go(mouse.hit.p, Head.Position, .25)
-					elseif Scripts.Blade.Value then
-					ecount = 0
-					error("Your weapon is sheathed.", 1)
-					elseif Scripts.Blade.Value == nil then
-					ecount = 0
-					error("You do not have a weapon equipped.", 1)
-					end
-					elseif calc < 0 then
-					ecount = 0
-					error("Not enough Fatigue!", 1)
-				end
-				elseif Scripts.Magic.Value == true then
-				print'yesmagic'
-				local calc = mana.Value - cost
-				if equipped == true then
-					print'equipped'
-					if calc >= 0 then
-						print'magic should go'
-						mana.Value = mana.Value - cost
-						go(mouse.hit.p, Head.Position, .25)
-							
-					end
+			elseif Bow.Value == true and Arrows.Value == false then
+			ecount = 0
+			error("You do not have any Arrows equipped!", 1.5)
+				enabled = true
+				elseif Magic.Value == true then
+				print'yes magic'
+				swingWithOut:Play()
+				print'swingwithout'
+				wait(.5)
+				local fakestartpos=(sword.Handle.CFrame*CFrame_new(barreloffset)).p
+				local vec=(targetpos-startpos).unit
+					
+				local p=Instance_new("Part")
+				p.Name="Arrow"
+				p.BrickColor=BrickColor_new("White")
+				p.CanCollide=false
+				p.TopSurface="Smooth"
+				p.BottomSurface="Smooth"
+				p.formFactor="Custom"
+				p.Size=Vector3_new(1,1,1)
+				Scripts.SMesh:clone().Parent = p
+					
+				local c=Instance_new("ObjectValue")
+				c.Name="creator"
+				c.Value=Player
+				c.Parent=p
+					
+				local sound=Instance_new("Sound")
+				sound.SoundId="http://www.roblox.com/asset/?id=16211030"
+				sound.Volume=1
+				sound.Parent=p
+				sound:Play()
+					
+				local damagetag=Instance_new("IntValue")
+				damagetag.Name="DamageTag"
+				damagetag.Value=damage
+				damagetag.Parent=p
+					
+				local s=Scripts.Hurt:clone()
+				s.Parent=p
+				s.Disabled=false
+					
+				local hit,endpos=castray(startpos,vec,range,sword.Parent,false)
+				local fakevec=(endpos-fakestartpos).unit
+				if hit~=nil then
+					local newcf=CFrame_new(endpos,endpos+fakevec)*CFrame_new(0,0,.9+(math_random(0,1)*.4))
+					p.CFrame=newcf
+					local w=Instance_new("Weld")
+					w.Part0=hit
+					w.Part1=p
+					w.C0=hit.CFrame:inverse()*newcf
+					w.C1=newcf:inverse()*newcf
+					w.Parent=p
 					else
-					ecount = 0
-					error("Not enough Mana!", 1)
-		end end end)
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		-- Event Handling
-			
-			
-			
-			
-			
-			
-			
-			
-			
+					p.CFrame=CFrame_new(endpos,endpos+fakevec)
+					p.Velocity=fakevec*300
+					p.Parent=Workspace
+				end
+					
+				debris:AddItem(p,.7)
+				p.Parent=Workspace
+					
+				delay(0,function()
+					drawbeam(fakestartpos,endpos,BrickColor_new("Bright red"),fadedelay)
+				end)
+				if hit.Parent:FindFirstChild("Monster") then
+					damagef(hit.Parent.Monster, Player, "Magicka")
+					tagHumanoid(hit.Parent.Monster, Player)
+				end
+				playsound.SoundName.Value="FireSound"
+				playsound.Value=not playsound.Value
+					
+				wait(1)
+				enabled = true
+			end 
+		end
 		mouse.Button1Down:connect(function ()
-			cursor.Visible = false
-			if mouse.Target then
-				--[[if mouse.Target.Name == "Schmeh" then
-								mouse.Target.BrickColor = BrickColor_new("Really red")
-					ecount = 0
-					error("Button 1 Pressed", 1)
-				end]]
+			if not enabled then
+				return
 			end
-		end)
-		mouse.Button2Down:connect(function ()
-			cursor.Visible = false
-			--[[ecount = 0
-			error("Button 2 Pressed", 1)]]
-			if rDeb == 0 then
-				rDeb = 1
+			if Scripts.Magic.Value == false then
+				print'nomagic'
+				local calc = fatigue.Value - cost
+				if calc >= 0 then
+					print'calc1 good'
+					if equipped == true then
+						print'equipped'
+						fatigue.Value = fatigue.Value - cost
+						go(mouse.hit.p, Head.Position, .25)
+						elseif Scripts.Blade.Value then
+						ecount = 0
+						error("Your weapon is sheathed.", 1)
+						elseif Scripts.Blade.Value == nil then
+						ecount = 0
+						error("You do not have a weapon equipped.", 1)
+						end
+						elseif calc < 0 then
+						ecount = 0
+						error("Not enough Fatigue!", 1)
+					end
+					elseif Scripts.Magic.Value == true then
+					print'yesmagic'
+					local calc = mana.Value - cost
+					if equipped == true then
+						print'equipped'
+						if calc >= 0 then
+							print'magic should go'
+							mana.Value = mana.Value - cost
+							go(mouse.hit.p, Head.Position, .25)
+								
+						end
+						else
+						ecount = 0
+						error("Not enough Mana!", 1)
+			end end end)
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			-- UI Event Handling 
+				
+				
+				
+				
+				
+				
+				
+
+
+
+
+
+			local UIchildren = CharMenuUI:GetChildren()
+			
+			function addrare(name)
+				for _,v in pairs(CharMenuInfoWindow.Rarity:GetChildren()) do 
+					if v.Name == name then
+						v.Visible = true
+						else
+						v.Visible = false	
+					end
+				end
+			end
+			function rarity(itemname, what, bf)
+				if what == "Weapon" or what == "Secondary" then
+					stats = Weapons:FindFirstChild(itemname).Stats
+					addrare(stats.Rarity.Value)
+					CharMenuInfoWindow.Stats.Armor.Text = "+"..tostring(stats.Armor.Value).." Armor"
+					CharMenuInfoWindow.Stats.Fatigue.Text = "+"..tostring(stats.Fatigue.Value).." Fatigue"
+					CharMenuInfoWindow.Stats.Health.Text = "+"..tostring(stats.Health.Value).." Health"
+					CharMenuInfoWindow.Stats.Magicka.Text = "+"..tostring(stats.Magicka.Value).." Magicka"
+					CharMenuInfoWindow.Stats.Mana.Text = "+"..tostring(stats.Mana.Value).." Mana"
+					CharMenuInfoWindow.Stats.Strength.Text = "+"..tostring(stats.Strength.Value).." Strength"
+					CharMenuInfoWindow.Type.Thing.Text = tostring(bf)
+					elseif what == "Potion" then
+					local stats = game.Lighting.Items.Potions:FindFirstChild(itemname).Stats
+					addrare(stats.Rarity.Value)
+					CharMenuInfoWindow.Stats.Armor.Text = "+"..tostring(stats.Armor.Value).." Armor"
+					CharMenuInfoWindow.Stats.Fatigue.Text = "+"..tostring(stats.Fatigue.Value).." Fatigue"
+					CharMenuInfoWindow.Stats.Health.Text = "+"..tostring(stats.Health.Value).." Health"
+					CharMenuInfoWindow.Stats.Magicka.Text = "+"..tostring(stats.Magicka.Value).." Magicka"
+					CharMenuInfoWindow.Stats.Mana.Text = "+"..tostring(stats.Mana.Value).." Mana"
+					CharMenuInfoWindow.Stats.Strength.Text = "+"..tostring(stats.Strength.Value).." Strength"
+					CharMenuInfoWindow.Type.Thing.Text = "Potion"
+					elseif what == "Food" then
+					local stats = game.Lighting.Items.Food:FindFirstChild(itemname).Stats
+					addrare(stats.Rarity.Value)
+					CharMenuInfoWindow.Stats.Armor.Text = "+"..tostring(stats.Armor.Value).." Armor"
+					CharMenuInfoWindow.Stats.Fatigue.Text = "+"..tostring(stats.Fatigue.Value).." Fatigue"
+					CharMenuInfoWindow.Stats.Health.Text = "+"..tostring(stats.Health.Value).." Health"
+					CharMenuInfoWindow.Stats.Magicka.Text = "+"..tostring(stats.Magicka.Value).." Magicka"
+					CharMenuInfoWindow.Stats.Mana.Text = "+"..tostring(stats.Mana.Value).." Mana"
+					CharMenuInfoWindow.Stats.Strength.Text = "+"..tostring(stats.Strength.Value).." Strength"
+					CharMenuInfoWindow.Type.Thing.Text = "Food"
+					elseif what == "Armor" then
+					stats = game.Lighting.Items.Armor:FindFirstChild(itemname).Stats
+					addrare(stats.Rarity.Value)
+					CharMenuInfoWindow.Stats.Armor.Text = "+"..tostring(stats.Armor.Value).." Armor"
+					CharMenuInfoWindow.Stats.Fatigue.Text = "+"..tostring(stats.Fatigue.Value).." Fatigue"
+					CharMenuInfoWindow.Stats.Health.Text = "+"..tostring(stats.Health.Value).." Health"
+					CharMenuInfoWindow.Stats.Magicka.Text = "+"..tostring(stats.Magicka.Value).." Magicka"
+					CharMenuInfoWindow.Stats.Mana.Text = "+"..tostring(stats.Mana.Value).." Mana"
+					CharMenuInfoWindow.Stats.Strength.Text = "+"..tostring(stats.Strength.Value).." Strength"
+					CharMenuInfoWindow.Type.Thing.Text = tostring(bf)
+				end
+			end
+			for _,v in pairs(CharMenuUI:GetChildren()) do 
+				if v:isA("ImageButton") then print(v.Name)
+					v.MouseEnter:connect(function()
+						if v.Item.Value ~= "" then
+							CharMenuInfoWindow.Visible = true
+							CharMenuInfoWindow.Position = v.Position + UDim2_new(0,63,0,0)
+							rarity(v.Item.Value, v.Class.Value, v.Type.Value)
+						end
+					end)
+					v.MouseLeave:connect(function()
+						CharMenuInfoWindow.Visible = false
+					end)
+				end
+			end
+
+	
+			for _,v in pairs(CharMenuBackground:GetChildren()) do 
+				if v:isA("TextButton") then
+					v.MouseButton1Down:connect(function ()
+						if d == 0 then
+							d = 1
+							CharMenuBackground:findFirstChild(v.Text).Visible = true
+							if v.Text ~= "Backpack" then
+								CharMenuBackground.Backpack.Visible = false
+							end
+							if v.Text ~= "Equip" then
+								CharMenuBackground.Equip.Visible = false
+							end
+							if v.Text ~= "Questlog" then
+								CharMenuBackground.Questlog.Visible = false
+							end
+						end 
+						d = 0
+					end)
+				end
+			end
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			--  MOUSE Event Handling
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			mouse.Button1Down:connect(function ()
+				cursor.Visible = false
 				if mouse.Target then
-					local tgt = mouse.Target
-					print(mouse.Target.Name)
+					--[[if mouse.Target.Name == "Schmeh" then
+						mouse.Target.BrickColor = BrickColor_new("Really red")
+						ecount = 0
+						error("Button 1 Pressed", 1)
+					end]]
+				end
+			end)
+			mouse.Button2Down:connect(function ()
+				cursor.Visible = false
+				--[[ecount = 0
+				error("Button 2 Pressed", 1)]]
+				if rDeb == 0 then
+					rDeb = 1
+					if mouse.Target then
+						local tgt = mouse.Target
+						print(mouse.Target.Name)
 						if tgt.Parent:FindFirstChild("TChest") ~= nil then
 							treasure(tgt)
 							elseif tgt.Parent:FindFirstChild("Door") ~= nil then
