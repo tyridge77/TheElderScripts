@@ -1,7 +1,6 @@
 -- Essentials
 wait(1)
 
-
 local Lighting = game:GetService("Lighting");
 local debris = game:GetService("Debris");
 local GameFiles = Lighting:WaitForChild("GameFiles");
