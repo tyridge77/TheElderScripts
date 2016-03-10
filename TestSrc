@@ -11,11 +11,11 @@ local y = v[2]/div
 local r,g,b = v[3][1],v[3][2],v[3][3]
 local p = Instance.new('Part',script)
 p.Anchored=true
-parts[#parts+1]=p;
 p.CanCollide=false
 p.Size=Vector3.new(1,1,0)/div
 p.CFrame = CFrame.Angles(0,math.rad(180),0)*CFrame.new((res.X/(div*2))-x,(res.Y/div)-y,50)
 local pM=Instance.new('SpecialMesh',p)pM.MeshId='rbxassetid://9856898'pM.TextureId='rbxassetid://338594320'
+parts[#parts+1]=pM;
 pM.Scale = p.Size*2
 pM.VertexColor = Vector3.new(r/255,g/255,b/255)
 if x*div==val+1 then
@@ -24,12 +24,15 @@ val=val+1
 end
 end
 
+rst = game:GetService("RunService").RenderStepped;
+
 while true do
 
 wait(math.random(2,4))
 
 for _,v in pairs(parts) do
-   v.BrickColor = BrickColor.random()
+   local r = BrickColor.random().Color3;
+   v.VertexColor = Vector3.new(r.r,r.g,r.b);
 end
 
 end
