@@ -24,7 +24,7 @@ val=val+1
 end
 end
 
-rst = game:GetService("RunService").RenderStepped;
+local h = game:GetService("RunService").Heartbeat;
 
 while true do
 
@@ -33,6 +33,7 @@ wait(math.random(2,4))
 for _,v in pairs(parts) do
    local r = BrickColor.random().Color3;
    v.VertexColor = Vector3.new(r.r,r.g,r.b);
+   h:wait();
 end
 
 end
