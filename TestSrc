@@ -3,12 +3,15 @@ local img = {{0,0,{43,80,88}},{0,1,{50,85,91}},{0,2,{49,84,90}},{0,3,{43,76,81}}
 local res = Vector2.new(183,214)
 local val = 0
 local div = 2
+parts={};
 for i,v in pairs(img)do
+
 local x = v[1]/div
 local y = v[2]/div
 local r,g,b = v[3][1],v[3][2],v[3][3]
 local p = Instance.new('Part',script)
 p.Anchored=true
+parts[#parts+1]=p;
 p.CanCollide=false
 p.Size=Vector3.new(1,1,0)/div
 p.CFrame = CFrame.Angles(0,math.rad(180),0)*CFrame.new((res.X/(div*2))-x,(res.Y/div)-y,50)
@@ -19,4 +22,14 @@ if x*div==val+1 then
 wait()
 val=val+1
 end
+end
+
+while true do
+
+wait(math.random(2,4))
+
+for _,v in pairs(parts) do
+   v.BrickColor = BrickColor.random()
+end
+
 end
