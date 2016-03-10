@@ -4,7 +4,7 @@ local res = Vector2.new(183,214)
 local val = 0
 local div = 2
 parts={};
-h=game:GetService("RunService").Heartbeat;
+h=game:GetService("RunService").RenderStepped;
 
 for i,v in pairs(img)do
 h:wait();
