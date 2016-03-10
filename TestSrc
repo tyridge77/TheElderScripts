@@ -4,9 +4,6 @@ local res = Vector2.new(183,214)
 local val = 0
 local div = 2
 parts={};
-
-h = game:GetService("RunService").Heartbeat;
-
 for i,v in pairs(img)do
 h:wait();
 local x = v[1]/div
@@ -22,11 +19,11 @@ parts[#parts+1]=pM;
 pM.Scale = p.Size*2
 pM.VertexColor = Vector3.new(r/255,g/255,b/255)
 if x*div==val+1 then
-wait()
 val=val+1
 end
 end
 
+rst = game:GetService("RunService").RenderStepped;
 
 while true do
 
